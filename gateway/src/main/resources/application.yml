@@ -1,0 +1,31 @@
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+        defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost
+server:
+  port: 8081
+
+spring:
+  application:
+    name: GATEWAY
+  config:
+    import: optional:configserver:http://localhost:8888
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: students
+          uri: lb://students
+          predicates:
+            - Path=/api/v1/students/**
+        - id: schools
+          uri: lb://schools
+          predicates:
+            - Path=/api/v1/schools/**
+
